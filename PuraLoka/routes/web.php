@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GeneratorController;
 
-Route::get('/', function () {
-    return view('main');
-});
+// Route::get('/', function () {
+//     return view('main');
+// });
+
+Route::get('/', [GeneratorController::class, 'index']);
 
 Route::get('/generate', function () {
-    return view('generate'); // Halaman Generate Video
+    return view('AI.generate'); // Halaman Generate Video
 });

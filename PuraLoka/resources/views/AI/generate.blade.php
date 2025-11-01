@@ -115,7 +115,7 @@
         
         
         <!-- HEADER (Umum) --><div class="text-center mb-10">
-            <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">Budaya Loka <span class="text-green-600">AI</span></h1>
+            <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">Budaya Loka <span class="text-emerald-600">AI</span></h1>
         </div>
         
         
@@ -126,13 +126,13 @@
             <!-- 1. UNGGAH GAMBAR -->
             <div class="border-b pb-8 border-gray-200">
                 <label for="image_upload_v6" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                    <span class="bg-green-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar Utama Anda
+                    <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar Utama Anda
                 </label>
 
                 <!-- Div Wrapper Utama yang Menjadi Target Klik -->
                 <div
                     class="relative mt-1 flex items-center justify-center border-4 border-dashed rounded-3xl p-8 transition duration-300 h-96 cursor-pointer group shadow-inner"
-                    :class="{'border-green-600 bg-green-50/50': imagePreview, 'border-gray-300 hover:border-green-500 hover:bg-gray-50': !imagePreview}"
+                    :class="{'border-emerald-600 bg-green-50/50': imagePreview, 'border-gray-300 hover:border-emerald-500 hover:bg-gray-50': !imagePreview}"
                     onclick="document.getElementById('image_upload_v6').click()">
                     
                     <input id="image_upload_v6" name="image" type="file" class="hidden" @change="previewFile" accept="image/*" required>
@@ -164,7 +164,7 @@
             <!-- 2. PROMPT INPUT -->
             <div class="border-b pb-8 border-gray-200">
                 <label for="prompt_input" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                    <span class="bg-green-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Video Anda (Prompt)
+                    <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Video Anda (Prompt)
                 </label>
                 <textarea
                     id="prompt_input"
@@ -227,7 +227,7 @@
                 <!-- Gunakan tag <video> atau iframe untuk embed, di sini disimulasikan dengan placeholder -->
                 <img :src="videoUrl" alt="Video Placeholder" class="w-full h-full object-cover">
                 <div class="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <div class="text-white text-2xl font-bold bg-green-600 px-4 py-2 rounded-lg">Simulasi Video Output</div>
+                    <div class="text-white text-2xl font-bold bg-emerald-600 px-4 py-2 rounded-lg">Simulasi Video Output</div>
                 </div>
             </div>
 
@@ -239,7 +239,7 @@
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <!-- Tombol Download (Simulasi) -->
                     <a :href="videoUrl" download="budaya_loka_ai_video.mp4" 
-                       class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-green-600 hover:bg-green-700 transition duration-200 shadow-md shadow-green-500/50">
+                       class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-md shadow-green-500/50">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>

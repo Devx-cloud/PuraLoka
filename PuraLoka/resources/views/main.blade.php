@@ -2,205 +2,245 @@
 
 @section('content')
 
-    <!-- 
+
+<!-- 
+        =============================================
+        NAVBAR (Fixed for In-Page Navigation)
+        =============================================
+    -->
+<nav id="main-navbar" class="fixed top-0 left-0 w-full z-50 shadow-xl 
+          transition-all duration-300 ease-in-out transform
+          bg-transparent backdrop-blur-md"> {{-- Default: Transparan blur --}}
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
+        <!-- Logo/Nama Website -->
+         <a href="#beranda" class="text-2xl font-extrabold tracking-widest transition duration-300 
+                text-white hover:text-emerald-300" id="navbar-logo"> {{-- Default text-white --}}
+            Budaya Loka
+        </a>
+        <!-- Nav Links -->
+        <div class="space-x-6 hidden sm:flex" id="navbar-links">
+            <a href="#beranda" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
+                    text-white hover:text-emerald-300 hover:border-emerald-300">Beranda</a> {{-- Default text-white --}}
+            <a href="#fitur-ai" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
+                    text-white hover:text-emerald-300 hover:border-emerald-300">Tools AI</a>
+            <a href="#alur" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
+                    text-white hover:text-emerald-300 hover:border-emerald-300">Alur </a>
+
+        </div>
+        {{-- login?? --}}
+    </div>
+</nav>
+
+<!-- 
         =============================================
         1. HERO SECTION (Fokus Utama: Prompt ke Video)
         =============================================
     -->
-    <header class="bg-gradient-to-br from-emerald-950 to-emerald-800 text-white py-20 md:py-26 shadow-2xl">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-            
-            <p class="text-xl font-semibold text-emerald-300 tracking-wider uppercase mb-10">
-                Budaya Loka AI
-            </p>
-            
-            <h1 class="text-5xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tighter text-emerald-100">
-                Seni Cipta Digital. <br class="hidden md:inline"> Dari Pikiran ke Video.
-            </h1>
-            
-            <p class="mt-8 text-xl text-emerald-200 max-w-4xl mx-auto">
-                Platform AI terdepan yang memberdayakan arsitektur pura. hidupkan foto menjadi <span class="font-bold">video dinamis</span>, atau <span class="font-bold">restorasi</span> kenangan lama dengan akurasi tinggi.
-            </p>
+<section id="beranda" class="
+    bg-gradient-to-br from-emerald-950 to-emerald-800 text-white shadow-2xl 
+    min-h-screen flex items-center pt-16 {{-- Kunci: Mengaktifkan flex dan centering vertikal --}}
+">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center w-full"> {{-- w-full memastikan div mengisi lebar untuk center horizontal --}}
 
-            <div class="mt-12 pt-6">
-                <svg class="w-10 h-10 mx-auto text-emerald-300 animate-bounce" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
-            </div>
+        <h1 class="text-5xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tighter text-emerald-100">
+            Seni Cipta Digital. <br class="hidden md:inline"> Dari Pikiran ke Video.
+        </h1>
+
+        <p class="mt-8 text-xl text-emerald-200 max-w-4xl mx-auto">
+            Platform AI terdepan yang memberdayakan arsitektur pura. hidupkan foto menjadi <span class="font-bold">video dinamis</span>, atau <span class="font-bold">restorasi</span> kenangan lama dengan akurasi tinggi.
+        </p>
+
+        <div class="mt-12 pt-6">
+            <svg class="w-10 h-10 mx-auto text-emerald-300 animate-bounce" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
         </div>
-    </header>
+    </div>
+</section>
 
-    <!-- 
+<!-- 
         =============================================
         2. FEATURE CARDS (2 Route Utama)
         =============================================
     -->
-        <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[3px] w-full"></div>
-    <section class="py-20 md:py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-16 text-gray-900">
-                Pilih Kekuatan AI yang Anda Butuhkan
-            </h2>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mx-auto">
-                
-                {{-- Card 1: Prompt to Video --}}
-                <a href="{{ url('/generate') }}" class="group block p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.03] border-4 border-transparent hover:border-emerald-600 bg-white">
-                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-xl bg-emerald-100 text-emerald-600">
-                        <!-- Inline SVG: Video Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect x="2" y="4" width="12" height="16" rx="2"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-2 mb-3 text-gray-900 group-hover:text-emerald-600">
-                        Gambar ke Video Dinamis
-                    </h3>
-                    <p class="text-gray-600">
-                        Tambahkan gerakan, efek cuaca, atau transisi sinematik ke gambar statis Anda hanya dengan deskripsi teks.
-                    </p>
-                </a>
+<section id="fitur-ai" class="py-20 md:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+        <h2 class="text-5xl font-bold text-center mb-16 text-gray-900">
+            TOOLS <span class="text-emerald-600">AI</span>
+        </h2>
 
-                {{-- Card 2: Image to Image (Restoration) --}}
-                <a href="{{ url('/generate') }}" class="group block p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.03] border-4 border-transparent hover:border-emerald-600 bg-white">
-                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-xl bg-emerald-100 text-emerald-600">
-                        <!-- Inline SVG: Edit/Repair Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-2 mb-3 text-gray-900 group-hover:text-emerald-600">
-                        Restorasi Gambar (Gambar-ke-Gambar)
-                    </h3>
-                    <p class="text-gray-600">
-                        Pulihkan foto buram, tambal bagian yang rusak (inpainting), atau perluas latar belakang (outpainting) secara otomatis.
-                    </p>
-                </a>
-                
-                {{-- Card 3: Image to Image (Restoration) --}}
-                <a href="{{ url('/generate') }}" class="group block p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.03] border-4 border-transparent hover:border-emerald-600 bg-white">
-                    <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-xl bg-emerald-100 text-emerald-600">
-                        <!-- Inline SVG: Edit/Repair Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-2 mb-3 text-gray-900 group-hover:text-emerald-600">
-                        Gambar denah-ke-video
-                    </h3>
-                    <p class="text-gray-600">
-                        Tambahkan gerakan, efek cuaca, atau transisi sinematik ke gambar statis Anda hanya dengan deskripsi teks.
-                    </p>
-                </a>
-            </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mx-auto">
+
+            {{-- Loop Tunggal untuk Membuat Semua Card --}}
+            @foreach($ai_tools as $tool)
+            {{-- Perhatikan: URL diarahkan ke /generate/ID_ALAT --}}
+            <a href="{{ url('/' . $tool['id']) }}"
+                class="group block p-8 rounded-2xl shadow-xl hover:shadow-2xl transition duration-300 transform hover:scale-[1.03] border-4 border-transparent hover:border-emerald-600 bg-white">
+
+                <div class="flex items-center justify-center w-16 h-16 mb-6 rounded-xl bg-emerald-100 text-emerald-600">
+                    {{-- Icon SVG diambil dari data --}}
+                    {!! $tool['icon_svg'] !!}
+                </div>
+
+                <h3 class="text-2xl font-bold mt-2 mb-3 text-gray-900 group-hover:text-emerald-600">
+                    {{ $tool['title'] }}
+                </h3>
+
+                <p class="text-gray-600">
+                    {{ $tool['description'] }}
+                </p>
+            </a>
+            @endforeach
+
         </div>
-    </section>
-    <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[2px] w-full"></div>
-    <!-- 
+    </div>
+</section>
+<!-- <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[2px] w-full"></div> -->
+<!-- 
         =============================================
         3. HOW IT WORKS (Cara Kerjanya)
         =============================================
     -->
-    <section class="py-20 md:py-24 bg-gray-50">
-        <div class="max-w-6xl mx-auto px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-16 text-gray-900">
-                Alur Kerja Cepat. <span class="text-emerald-600">Semudah Tiga Langkah.</span>
-            </h2>
 
-            <div class="relative grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Decorative Line (only visible on large screens) -->
-                <div class="absolute hidden md:block w-2/3 h-0.5 bg-emerald-200 top-16 left-1/2 transform -translate-x-1/2"></div>
-                
-                <!-- Step 1 -->
-                <div class="text-center p-6 rounded-xl relative z-10">
-                    <div class="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-emerald-600 text-white shadow-2xl mb-4">
-                        <span class="text-3xl font-extrabold">1</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-4 mb-3 text-gray-900">Unggah Aset Anda</h3>
-                    <p class="text-gray-600">Pilih gambar atau foto yang ingin Anda proses (baik untuk Video, Generasi, atau Restorasi).</p>
-                </div>
+<section id="alur" class="py-20 md:py-32 bg-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
-                <!-- Step 2 -->
-                <div class="text-center p-6 rounded-xl relative z-10">
-                    <div class="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-emerald-600 text-white shadow-2xl mb-4">
-                        <span class="text-3xl font-extrabold">2</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-4 mb-3 text-gray-900">Berikan Prompt/Deskripsi</h3>
-                    <p class="text-gray-600">Tuliskan instruksi atau gaya kreatif yang Anda inginkan. Semakin spesifik, semakin baik hasilnya.</p>
-                </div>
+        <h2 class="text-4xl lg:text-5xl font-extrabold text-center mb-16 lg:mb-24 text-gray-900 leading-tight">
+            Alur Kerja Cepat. <span class="text-emerald-600">Semudah Tiga Langkah.</span>
+        </h2>
 
-                <!-- Step 3 -->
-                <div class="text-center p-6 rounded-xl relative z-10">
-                    <div class="flex items-center justify-center w-20 h-20 mx-auto rounded-full bg-emerald-600 text-white shadow-2xl mb-4">
-                        <span class="text-3xl font-extrabold">3</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mt-4 mb-3 text-gray-900">Dapatkan Hasil AI</h3>
-                    <p class="text-gray-600">AI kami akan memproses permintaan Anda, dan hasilnya siap Anda unduh dalam hitungan detik.</p>
-                </div>
-            </div>
+        <div class="relative">
+            <div class="hidden md:block absolute w-1 h-full bg-emerald-200 left-1/2 transform -translate-x-1/2 top-0"></div>
+
+            {{-- --------------------------------- LANGKAH 1 --------------------------------- --}}
+            @include('partials.stepFlow', ['step' => 1, 'reverse' => false])
+
+            {{-- --------------------------------- LANGKAH 2 --------------------------------- --}}
+            @include('partials.stepFlow', ['step' => 2, 'reverse' => true])
+
+            {{-- --------------------------------- LANGKAH 3 --------------------------------- --}}
+            @include('partials.stepFlow', ['step' => 3, 'reverse' => false])
+
         </div>
-    </section>
+    </div>
 
-    <!-- 
+</section>
+<!-- 
         =============================================
-        4. AI WORKFLOW EXAMPLE (Contoh Gambar Kerja)
+        JAVASCRIPT for Hiding/Showing & Dynamic Styling Navbar on Scroll
         =============================================
     -->
-    <section class="py-20 md:py-24 bg-white">
-        <div class="max-w-7xl mx-auto px-6 lg:px-8">
-            <h2 class="text-4xl font-bold text-center mb-16 text-gray-900">
-                Lihat Hasil Kerjanya: Proses Gambar ke Video
-            </h2>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start max-w-7xl mx-auto">
-                
-                <!-- Kolom 1: Input Gambar -->
-                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border-t-4 border-emerald-500 text-center">
-                    <h3 class="text-xl font-bold mb-4 text-gray-800">1. Input Gambar Statis</h3>
-                    <div class="h-64 w-full bg-gray-200 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                        {{-- Placeholder Gambar Input --}}
-                        <p class="text-gray-500 font-semibold"></p>
-                    </div>
-                    <p class="text-sm text-gray-500">Foto landscape pedesaan di sore hari.</p>
-                </div>
-                
-                <!-- Kolom 2: Prompt dan Proses -->
-                <div class="bg-emerald-50 p-6 rounded-xl shadow-2xl border-t-4 border-emerald-700 text-center relative">
-                    <!-- Panah Menunjuk ke Output (Desktop View) -->
-                    <div class="hidden lg:block absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2">
-                        <svg class="w-10 h-10 text-emerald-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                    </div>
-                    
-                    <h3 class="text-xl font-bold mb-4 text-emerald-800">2. Prompt & Proses AI</h3>
-                    <div class="p-4 bg-white rounded-lg border-2 border-emerald-300 shadow-inner">
-                        <p class="font-mono text-xs text-left text-gray-700">
-                            "Tambahkan efek matahari terbenam yang bergerak, kabut tipis di lembah, dan air sungai mengalir."
-                        </p>
-                    </div>
-                    <div class="mt-4 flex items-center justify-center space-x-2 text-emerald-600 font-semibold">
-                        <!-- Inline SVG: Cog Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4.93 19.07 1.41-1.41"/><path d="m17.66 6.34 1.41-1.41"/><circle cx="12" cy="12" r="3"/></svg>
-                        <span>AI Bekerja...</span>
-                    </div>
-                </div>
-                
-                <!-- Kolom 3: Output Video -->
-                <div class="bg-gray-50 p-6 rounded-xl shadow-lg border-t-4 border-emerald-500 text-center">
-                    <h3 class="text-xl font-bold mb-4 text-gray-800">3. Hasil Akhir (Video)</h3>
-                    <div class="h-64 w-full bg-gray-200 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                        {{-- Placeholder Video Output --}}
-                        <p class="text-emerald-500 font-semibold">
-                            
-                            </p>
-                        </div>
-                        <p class="text-sm text-gray-500 font-bold text-emerald-600">Video siap diunduh (4 detik)</p>
-                    </div>
-                </div>
-                
-            </div>
-        </section>
-        <!-- 
-            =============================================
-            5. 
-            =============================================
-        -->
-        
-        
-        
-        @endsection
-        
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navbar = document.getElementById('main-navbar');
+        let lastScrollTop = 0;
+        const scrollThreshold = 50; // Jarak scroll minimal sebelum navbar hide/show
+
+        // Dapatkan elemen yang akan diubah gayanya
+        const featureSection = document.getElementById('fitur-ai');
+        const alurSection = document.getElementById('alur');
+        const navLinksContainer = document.getElementById('navbar-links');
+        const navLinks = navLinksContainer ? navLinksContainer.querySelectorAll('a') : [];
+        const logoLink = document.getElementById('navbar-logo');
+
+        const classMap = {
+            // Kelas untuk navbar terang (di atas section putih)
+            light: {
+                navbar: ['bg-white', 'shadow-lg', 'bg-opacity-95', 'backdrop-blur-none'],
+                // navbar: ['bg-transparent', 'backdrop-blur-md', 'shadow-xl'],
+                removeNavbar: ['bg-transparent', 'backdrop-blur-md', 'shadow-xl'],
+                logo: ['text-emerald-600', 'hover:text-emerald-800'],
+                removeLogo: ['text-white', 'hover:text-emerald-300'],
+                links: ['text-emerald-600', 'hover:text-emerald-800', 'hover:border-emerald-800'],
+                removeLinks: ['text-white', 'hover:text-emerald-300', 'hover:border-emerald-300'],
+            },
+            // Kelas untuk navbar gelap (di atas section gelap/transparan)
+            dark: {
+                navbar: ['bg-transparent', 'backdrop-blur-md', 'shadow-xl'],
+                removeNavbar: ['bg-white', 'shadow-lg', 'bg-opacity-95', 'backdrop-blur-none'],
+                logo: ['text-white', 'hover:text-emerald-300'],
+                removeLogo: ['text-emerald-600', 'hover:text-emerald-800'],
+                links: ['text-white', 'hover:text-emerald-300', 'hover:border-emerald-300'],
+                removeLinks: ['text-emerald-600', 'hover:text-emerald-800', 'hover:border-emerald-800'],
+            }
+        };
+
+        const applyNavbarStyle = (styleType) => {
+            const style = classMap[styleType];
+            const removeStyle = classMap[styleType === 'light' ? 'dark' : 'light']; // Kebalikan dari style yang akan diterapkan
+
+            // Navbar
+            navbar.classList.remove(...removeStyle.navbar);
+            navbar.classList.add(...style.navbar);
+
+            // Logo
+            if (logoLink) {
+                logoLink.classList.remove(...removeStyle.logo);
+                logoLink.classList.add(...style.logo);
+            }
+
+            // Links
+            navLinks.forEach(link => {
+                link.classList.remove(...removeStyle.links);
+                link.classList.add(...style.links);
+            });
+        };
+
+        const handleNavbarStyleChange = () => {
+            // Kumpulkan semua section yang harus memicu theme 'light'
+            const lightThemeSections = [featureSection, alurSection].filter(el => el !== null);
+
+            // Jika tidak ada section yang terdeteksi, gunakan default 'dark'
+            if (lightThemeSections.length === 0) {
+                applyNavbarStyle('dark');
+                return;
+            }
+
+            const navHeight = navbar.offsetHeight;
+            let shouldBeLight = false;
+
+            // Cek apakah ada SATU SAJA section theme 'light' yang sedang 'intersect'
+            for (const section of lightThemeSections) {
+                const rect = section.getBoundingClientRect();
+
+                // Logika: Section dianggap aktif (light) jika bagian atasnya sudah melewati 
+                // ketinggian navbar, DAN bagian bawahnya belum sepenuhnya melewati
+                if (rect.top < navHeight && rect.bottom > navHeight / 2) {
+                    shouldBeLight = true;
+                    break; // Jika sudah menemukan satu, langsung keluar dari loop
+                }
+            }
+
+            if (shouldBeLight) {
+                applyNavbarStyle('light');
+            } else {
+                applyNavbarStyle('dark');
+            }
+        };
+
+        // --- LISTENER UTAMA ---
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // 1. Logic Hide/Show
+            if (scrollTop > lastScrollTop && scrollTop > scrollThreshold) {
+                // Hide Navbar
+                navbar.classList.add('-translate-y-full');
+            } else if (scrollTop < lastScrollTop || scrollTop <= 0) {
+                // Show Navbar (scroll ke atas atau di paling atas)
+                navbar.classList.remove('-translate-y-full');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+            // 2. Logic Perubahan Gaya Navbar
+            handleNavbarStyleChange();
+        });
+
+        // Jalankan sekali saat load untuk mengatur gaya awal
+        handleNavbarStyleChange();
+    });
+</script>
+
+@endsection
