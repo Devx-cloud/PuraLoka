@@ -22,8 +22,8 @@
             pollInterval: null,
             message: '', // Untuk pesan notifikasi
             
-            // Data Output (Simulasi)
-            videoUrl: 'https://placehold.co/600x400/089445/FFFFFF/video-final.mp4', 
+            // Data Output (Sekarang menggunakan null, akan diisi dari backend)
+            videoUrl: null, 
 
             // Fungsi untuk menampilkan preview gambar
             previewFile(event) {
@@ -42,7 +42,7 @@
                 }
             },
             
-            // Fungsi submit untuk memulai proses AI
+            // Fungsi submit untuk memulai proses AI (MODIFIKASI: Panggilan API NYATA)
             async submitGeneration() {
                 this.message = '';
 
@@ -53,52 +53,90 @@
 
                 this.isGenerating = true;
                 this.jobId = null;
+                this.videoUrl = null;
                 
-                // Simulasikan Fetch API call
-                console.log('Mengirim permintaan generasi...');
+                // Siapkan FormData
+                const formData = new FormData();
+                formData.append('image', this.imageFile);
+                formData.append('prompt', this.promptText);
+                
+                this.message = 'Mengirim data ke backend FastAPI...';
                 
                 try {
-                    // Simulasikan pengiriman data dan penundaan respons
-                    await new Promise(resolve => setTimeout(resolve, 1500)); 
+                    // PANGGILAN FETCH API NYATA (URL FastAPI)
+                    const response = await fetch('http://127.0.0.1:8001/generate-video/', { 
+                        method: 'POST',
+                        body: formData
+                    });
 
-                    // SIMULASI RESPON: Berhasil dan mendapatkan ID
-                    const data = { prompt_id: 'abcd1234efgh5678' }; 
-                    this.jobId = data.prompt_id;
-                    this.message = 'Permintaan diterima. Menunggu proses AI dimulai...';
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.detail || `Server error: ${response.status}`);
+                    }
+
+                    const data = await response.json(); 
+                    this.jobId = data.prompt_id; // Menggunakan prompt_id dari FastAPI
+                    this.message = 'Permintaan diterima. Job ID: ' + this.jobId + '. Memulai pengecekan status...';
                     this.startPolling();
 
                 } catch (error) {
                     console.error('Error komunikasi:', error);
-                    this.message = '❌ Gagal memulai proses. Cek konsol untuk detail.';
+                    this.message = '❌ Gagal memulai proses: ' + error.message;
                     this.isGenerating = false;
                 }
             },
 
+            // Fungsi Polling Status (MODIFIKASI: Panggilan API NYATA)
             startPolling() {
                 if (this.pollInterval) clearInterval(this.pollInterval);
 
-                // SIMULASI Polling Status
-                let progress = 0;
-                this.pollInterval = setInterval(() => {
+                this.pollInterval = setInterval(async () => {
                     if (!this.jobId) return clearInterval(this.pollInterval);
                     
-                    progress += 10;
-                    
-                    if (progress >= 100) {
+                    try {
+                        // PANGGILAN FETCH API NYATA (URL FastAPI)
+                        const response = await fetch(`http://127.0.0.1:8001/status/${this.jobId}`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Gagal cek status.');
+                        }
+                        
+                        const statusData = await response.json();
+                        
+                        // --- Logika Status dari FastAPI ---
+                        if (statusData.status === 'DONE') {
+                            clearInterval(this.pollInterval);
+                            this.isGenerating = false;
+                            
+                            // Gabungkan URL FastAPI dengan path download
+                            const base_url = 'http://127.0.0.1:8001';
+                            this.videoUrl = base_url + statusData.video_url; 
+                            
+                            this.message = '✅ Video Selesai! Mengarahkan ke halaman output...';
+                            
+                            // TRANSISI KE HALAMAN OUTPUT
+                            setTimeout(() => {
+                                this.currentPage = 'output'; 
+                            }, 500);
+
+                        } else if (statusData.status === 'FAILED') {
+                            clearInterval(this.pollInterval);
+                            this.isGenerating = false;
+                            this.message = '❌ Proses gagal. ' + (statusData.error || 'Terjadi kesalahan pemrosesan.');
+                        } else if (statusData.status === 'PROCESSING') {
+                             this.message = 'Sedang diproses oleh AI. Mohon tunggu...';
+                        } else if (statusData.status === 'PENDING') {
+                            this.message = 'Sedang menunggu antrian ComfyUI...';
+                        }
+                        
+                    } catch (error) {
+                        console.error('Error saat polling:', error);
                         clearInterval(this.pollInterval);
                         this.isGenerating = false;
-                        this.message = '✅ Video Selesai! Mengarahkan ke halaman output...';
-                        
-                        // TRANSISI KE HALAMAN OUTPUT
-                        this.currentPage = 'output'; 
-
-                    } else if (progress > 50) {
-                        this.message = `Sedang memproses tahap akhir... ${progress}%`;
-                    } else if (progress > 10) {
-                        this.message = `Sedang diproses oleh AI. Status: ${progress}%`;
+                        this.message = '❌ Komunikasi server terputus.';
                     }
                     
-                }, 1000); // Polling lebih cepat untuk simulasi
+                }, 3000); // Polling setiap 3 detik
             },
             
             // Fungsi untuk mereset ke halaman input
@@ -109,6 +147,7 @@
                 this.promptText = '';
                 this.message = '';
                 this.jobId = null;
+                this.videoUrl = null;
                 if (this.pollInterval) clearInterval(this.pollInterval);
             }
         }"
