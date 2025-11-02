@@ -104,13 +104,13 @@
                         const statusData = await response.json();
                         
                         // --- Logika Status dari FastAPI ---
-                        if (statusData.status === 'DONE') {
+                        if (statusData.status === 'DONE' && statusData.video_url) {
                             clearInterval(this.pollInterval);
                             this.isGenerating = false;
                             
                             // Gabungkan URL FastAPI dengan path download
                             const base_url = 'http://127.0.0.1:8001';
-                            this.videoUrl = base_url + statusData.video_url; 
+                            this.videoUrl = base_url + statusData.video_url;
                             
                             this.message = '✅ Video Selesai! Mengarahkan ke halaman output...';
                             
@@ -270,11 +270,20 @@
 
                 <!-- Video Player (Menggunakan URL Placeholder) -->
                 <div class="relative w-full aspect-video rounded-2xl shadow-2xl overflow-hidden mx-auto bg-gray-900 border-4 border-white">
-                    <!-- Gunakan tag <video> atau iframe untuk embed, di sini disimulasikan dengan placeholder -->
-                    <img :src="videoUrl" alt="Video Placeholder" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div class="text-white text-2xl font-bold bg-emerald-600 px-4 py-2 rounded-lg">Simulasi Video Output</div>
+
+                    <video
+                        x-show="videoUrl"
+                        :src="videoUrl"
+                        controls
+                        autoplay
+                        class="w-full h-full object-contain">
+                        Browser Anda tidak mendukung pemutaran video.
+                    </video>
+
+                    <div x-show="!videoUrl" class="absolute inset-0 flex items-center justify-center bg-gray-900">
+                        <div class="text-white text-xl font-bold">Video Sedang Dimuat...</div>
                     </div>
+
                 </div>
 
                 <!-- Detail & Tombol Aksi -->
