@@ -12,3 +12,6 @@ Route::get('/', [GeneratorController::class, 'index']);
 Route::get('/generate', function () {
     return view('AI.generate'); // Halaman Generate Video
 });
+Route::get('/Image-to-3D', function () {
+    return view('AI.3DModel'); // Halaman Generate 3D
+});
