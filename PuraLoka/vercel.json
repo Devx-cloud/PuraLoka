@@ -5,17 +5,16 @@
         "api/index.php": { "runtime": "vercel-php@0.7.4" }
     },
     "routes": [
-        { "src": "/build/(.*)", "dest": "/public/build/" },
+        { "src": "/build/(.*)", "dest": "/public/build/$1" },
         { "src": "/(.*)", "dest": "/api/index.php" }
     ],
     "public": true,
-    "installCommand": "composer install --no-dev --prefer-dist && npm install",
-    "buildCommand": "vite build && npm run build && php artisan migrate --force",
+    "buildCommand": "vite build",
     "outputDirectory": "public",
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": "false",
-        "APP_URL": "https://puraloka.vercel.app",
+        "APP_URL": "https://pura-loka.vercel.app",
         "APP_KEY": "base64:5yAvnfHsukQUiPsWFPyQdsgRh3lyWbsG4o/nMa9tP28=",
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
