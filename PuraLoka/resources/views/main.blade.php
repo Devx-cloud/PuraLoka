@@ -56,7 +56,7 @@
             Tools <span class="text-emerald-600">AI</span>
         </h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-8 mx-auto">
 
             {{-- Loop Tunggal untuk Membuat Semua Card --}}
             @foreach($ai_tools as $tool)
