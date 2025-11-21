@@ -1,18 +1,21 @@
 {
   "version": 2,
-  "public": true,
-  "builds": [
-    {
-      "src": "public/index.php",
-      "use": "@brizer/vercel-php"
+  "framework": null,
+  "functions": {
+    "api/index.php": {
+      "runtime": "vercel-php@0.6.0" 
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "public/index.php"
+      "dest": "/api/index.php"
     }
   ],
-  "installCommand": "npm install",
-  "buildCommand": "npm run build"
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "APP_URL": "https://pura-loka.vercel.app", 
+    "APP_KEY": "base64:5yAvnfHsukQUiPsWFPyQdsgRh3lyWbsG4o/nMa9tP28="
+  }
 }
