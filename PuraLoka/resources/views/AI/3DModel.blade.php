@@ -14,7 +14,7 @@
         Semua logika JS sekarang ada di dalam x-data="{...}" di bawah ini.
         ========================================================================
         --}}
-        <!-- <div
+        <div
             class="w-full max-w-5xl bg-white p-6 sm:p-12 rounded-[2rem] shadow-2xl transition-all duration-500 ease-in-out border border-gray-100 relative"
             x-data="{
                 // ================== STATE APP ==================
@@ -274,7 +274,7 @@
                     if (fileInput) fileInput.value = '';
                 }
             }"
-            x-cloak>  -->
+            x-cloak> 
             {{-- AKHIR DARI BLOK x-data --}}
 
             <div class="text-center mb-10">
