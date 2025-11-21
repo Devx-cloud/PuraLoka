@@ -1,8 +1,16 @@
 {
-  "build": {
-    "env": {
-      "NPM_CONFIG_PRODUCTION": "false"
+  "version": 2,
+  "public": true,
+  "builds": [
+    {
+      "src": "public/index.php",
+      "use": "@vercel/php"
     }
-  },
-  "outputDirectory": "public"
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "public/index.php"
+    }
+  ]
 }
