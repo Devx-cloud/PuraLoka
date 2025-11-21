@@ -5,15 +5,6 @@ import { createApp } from 'vue';
 import ModelViewer from './components/modelViewer.vue';
 import '../css/app.css';
 
-// Penting: Inisialisasi Transition Plugin jika Anda menggunakan x-transition
-import intersect from '@alpinejs/intersect'; // Jika Anda menggunakan intersect
-import collapse from '@alpinejs/collapse';   // Jika Anda menggunakan collapse
-
-// Daftarkan Plugins (jika ada)
-Alpine.plugin(intersect);
-Alpine.plugin(collapse);
-
-
 window.Alpine = Alpine;
 
 Alpine.start();
