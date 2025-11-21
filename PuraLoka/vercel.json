@@ -4,7 +4,7 @@
   "builds": [
     {
       "src": "public/index.php",
-      "use": "@php-runtime/vercel-php"
+      "use": "@brizer/vercel-php"
     }
   ],
   "routes": [
@@ -12,5 +12,7 @@
       "src": "/(.*)",
       "dest": "public/index.php"
     }
-  ]
+  ],
+  "installCommand": "npm install",
+  "buildCommand": "npm run build"
 }
