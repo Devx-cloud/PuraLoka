@@ -3,6 +3,7 @@ import './bootstrap';
 import Alpine from 'alpinejs';
 import { createApp } from 'vue';
 import ModelViewer from './components/modelViewer.vue';
+import '../css/app.css';
 
 window.Alpine = Alpine;
 
