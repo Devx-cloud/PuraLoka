@@ -34,7 +34,7 @@ $image_justify = $reverse ? 'md:justify-start' : 'md:justify-end';
 
     <div class="md:w-1/2 flex justify-center {{ $image_justify }}">
         <!-- <img src="{{ asset('assets/images/placeholder-' . $step . '.jpeg') }}" alt="Langkah {{ $step }}"  -->
-        <img src="{{ asset('.\assets\images\test.jpeg') }}" alt="Langkah {{ $step }}"
+        <img src="{{ asset('./assets/images/test.jpeg') }}" alt="Langkah {{ $step }}"
             class="w-full max-w-sm lg:max-w-md h-auto rounded-2xl shadow-2xl ring-4 ring-emerald-100 transition-transform duration-500 hover:scale-[1.03] cursor-pointer">
     </div>
 
