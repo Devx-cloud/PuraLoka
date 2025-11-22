@@ -107,7 +107,7 @@
                     <p class="text-gray-100">
                         Bali, Indonesia
                         <br class="mb-1" />
-                        <a href="mailto:devasur2006@gmail.com" class="text-gray-100 hover:text-white transition-colors block mt-2">
+                        <a href="mailto:fidevofficial@gmail.com" class="text-gray-100 hover:text-white transition-colors block mt-2">
                             fidevofficial@gmail.com
                         </a>
                         <!-- Phone Icon -->
