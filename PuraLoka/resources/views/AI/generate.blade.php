@@ -81,7 +81,7 @@
                     if (this.pollTimer) clearTimeout(this.pollTimer);
                     this.pollTimer = null;
                     this.isError = true;
-                    this.message = '❌ Error: ' + errorMessage;
+                    // this.message = '❌ Error: ' + errorMessage;
                     this.appState = 'processing';
                 },
 
@@ -93,7 +93,7 @@
                     this.pollTimer = null;
 
                     this.videoPath = videoUrl;
-                    this.message = '✅ Video Selesai!';
+                    // this.message = '✅ Video Selesai!';
                     this.isError = false;
                     
                     setTimeout(() => { 
@@ -108,7 +108,7 @@
                  */
                 async submitGeneration() {
                     if (!this.imageFile) {
-                        this.message = '⚠️ Mohon unggah gambar 2D.';
+                        // this.message = '⚠️ Mohon unggah gambar 2D.';
                         this.isError = true;
                         return;
                     }
@@ -116,7 +116,7 @@
                     this.isError = false;
                     this.jobId = null;
                     this.appState = 'processing'; 
-                    this.message = 'Mengupload gambar dan prompt...';
+                    // this.message = 'Mengupload gambar dan prompt...';
 
                     const formData = new FormData();
                     formData.append('image', this.imageFile);
@@ -143,12 +143,12 @@
                         }
 
                         this.jobId = result.prompt_id; 
-                        this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                        // this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
                         
                         this.pollJobStatus(); 
 
                     } catch (error) {
-                        this.showError(error.message);
+                        // this.showError(error.message);
                     }
                 },
 
@@ -166,11 +166,11 @@
                         const response = await this.fetchWithTimeout(statusURL);
 
                         if (response.status === 404) {
-                            this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                            // this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
                             shouldContinuePolling = true;
 
                         } else if (!response.ok) {
-                            this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                            // this.message = `Server status error (${response.status}). Mencoba lagi...`;
                             shouldContinuePolling = true;
 
                         } else {
@@ -196,19 +196,19 @@
                                 case 'processing':
                                 case 'pending':
                                 case 'queued':
-                                    this.message = `Status [${this.jobId.substring(0, 8)}]: ${status.charAt(0).toUpperCase() + status.slice(1)}...`;
+                                    // this.message = `Status [${this.jobId.substring(0, 8)}]: ${status.charAt(0).toUpperCase() + status.slice(1)}...`;
                                     shouldContinuePolling = true;
                                     break;
                                 
                                 default:
-                                    this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                    // this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
                                     shouldContinuePolling = true;
                             }
                         }
                         
                     } catch (error) {
                         console.warn('Error saat polling:', error.message);
-                        this.message = `Koneksi ke server status terputus... Mencoba lagi.`;
+                        // this.message = `Koneksi ke server status terputus... Mencoba lagi.`;
                         shouldContinuePolling = true; 
                     }
 

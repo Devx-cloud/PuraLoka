@@ -157,7 +157,7 @@
                         this.pollJobStatus(); 
 
                     } catch (error) {
-                        this.showError(error.message);
+                        //this.showError(error.message);
                     }
                 },
 
@@ -181,13 +181,13 @@
 
                         if (response.status === 404) {
                             // Job belum siap di backend, coba lagi
-                            this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                            //this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
                             shouldContinuePolling = true;
 
                         } else if (!response.ok) {
                             // Error server (500, 502, dll.)
                             // Asumsikan ini error sementara dan coba lagi
-                            this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                            // this.message = `Server status error (${response.status}). Mencoba lagi...`;
                             shouldContinuePolling = true;
 
                         } else {
@@ -213,18 +213,18 @@
                                     break;
                                 
                                 case 'processing':
-                                    this.message = `Status [${this.jobId.substring(0, 8)}]: Masih memproses...`;
+                                    //this.message = `Status [${this.jobId.substring(0, 8)}]: Masih memproses...`;
                                     shouldContinuePolling = true;
                                     break;
                                 
                                 case 'pending':
                                 case 'queued':
-                                    this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu antrian...`;
+                                    //this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu antrian...`;
                                     shouldContinuePolling = true;
                                     break;
                                 
                                 default:
-                                    this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                    // this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
                                     shouldContinuePolling = true;
                             }
                         }
@@ -232,7 +232,7 @@
                     } catch (error) {
                         // (Error seperti timeout atau network putus)
                         console.warn('Error saat polling:', error.message);
-                        this.message = `Koneksi ke server status terputus... Mencoba lagi.`;
+                        // this.message = `Koneksi ke server status terputus... Mencoba lagi.`;
                         shouldContinuePolling = true; // Coba lagi
                     }
 
@@ -415,7 +415,7 @@
 
                 {{-- Bagian Download dan Reset --}}
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-lg">
-                    <p class="text-lg font-semibold text-gray-700 mb-6">Jalur Model: <span class="text-gray-500 italic break-all text-sm" x-text="modelPath"></span></p>
+                    <!-- <p class="text-lg font-semibold text-gray-700 mb-6">Jalur Model: <span class="text-gray-500 italic break-all text-sm" x-text="modelPath"></span></p> -->
 
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         {{-- Tombol Download --}}
