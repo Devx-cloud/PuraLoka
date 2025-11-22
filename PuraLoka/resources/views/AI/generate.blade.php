@@ -1,308 +1,441 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="en">
 
-@section('content')
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Generator AI - Pura Loka</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/1.12.0/model-viewer.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+        
+        /* Tambahkan style untuk spinner */
+        .spinner {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+        }
+        .spinner:after {
+            content: " ";
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 8px;
+            border-radius: 50%;
+            border: 6px solid #047857;
+            border-color: #047857 transparent #047857 transparent;
+            animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 antialiased">
+
 <div class="bg-gray-50">
-
-    <!-- CONTAINER UTAMA: Latar Belakang Gradien yang Lebih Dalam -->
     <div class="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-600 flex flex-col items-center justify-center p-4 sm:p-6 lg:l-10">
+        
         <div
-            class="w-full max-w-4xl bg-white p-6 sm:p-12 rounded-[2rem] shadow-2xl transition-all duration-500 ease-in-out border border-gray-100 relative"
-            x-data="{ 
-            // State Kontrol Halaman: 'input' atau 'output'
-            currentPage: 'input', 
-            
-            // Data Input
-            imagePreview: null,
-            imageFile: null,
-            promptText: '',
-            
-            // State Generasi
-            isGenerating: false,
-            jobId: null,
-            pollInterval: null,
-            message: '', // Untuk pesan notifikasi
-            
-            // Data Output (Sekarang menggunakan null, akan diisi dari backend)
-            videoUrl: null, 
-
-            // Fungsi untuk menampilkan preview gambar
-            previewFile(event) {
-                const file = event.target.files[0];
-                this.imageFile = file;
-                this.message = '';
-
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        this.imagePreview = e.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    this.imagePreview = null;
-                }
-            },
-            
-            // Fungsi submit untuk memulai proses AI (MODIFIKASI: Panggilan API NYATA)
-            async submitGeneration() {
-                this.message = '';
-
-                if (!this.imageFile || this.promptText.trim() === '') {
-                    this.message = '⚠️ Mohon unggah gambar dan masukkan prompt.';
-                    return;
-                }
-
-                this.isGenerating = true;
-                this.jobId = null;
-                this.videoUrl = null;
+            class="w-full max-w-5xl bg-white p-6 sm:p-12 rounded-[2rem] shadow-2xl transition-all duration-500 ease-in-out border border-gray-100 relative"
+            x-data="{
+                // ================== STATE APP VIDEO ==================
+                appState: 'input', 
+                imagePreview: null,
+                imageFile: null,
+                promptText: '',
                 
-                // Siapkan FormData
-                const formData = new FormData();
-                formData.append('image', this.imageFile);
-                formData.append('prompt', this.promptText);
+                // Status dan Polling
+                jobId: null,
+                pollTimer: null, 
+                message: '',
+                isError: false,
                 
-                this.message = 'Mengirim data ke backend FastAPI...';
+                // Data Output
+                videoPath: null,
                 
-                try {
-                    // PANGGILAN FETCH API NYATA (URL FastAPI)
-                    const response = await fetch('http://127.0.0.1:8001/generate-video/', { 
-                        method: 'POST',
-                        body: formData
-                    });
+                // Konfigurasi API
+                API_BASE_URL: 'https://mx5tmd8z-8080.asse.devtunnels.ms/api/v1',
+                POLL_INTERVAL_MS: 5000,
+                FETCH_TIMEOUT_MS: 60000,
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.detail || `Server error: ${response.status}`);
+                // ================== FUNGSI HELPER ==================
+
+                /**
+                 * Wrapper fetch dengan AbortController untuk timeout.
+                 */
+                async fetchWithTimeout(url, options = {}) {
+                    const controller = new AbortController();
+                    const id = setTimeout(() => controller.abort(), this.FETCH_TIMEOUT_MS);
+
+                    try {
+                        const response = await fetch(url, {
+                            ...options,
+                            signal: controller.signal 
+                        });
+                        return response;
+                    } catch (error) {
+                        if (error.name === 'AbortError') {
+                            throw new Error('Request timeout. Server butuh waktu terlalu lama untuk merespons.');
+                        }
+                        throw error;
+                    } finally {
+                        clearTimeout(id);
+                    }
+                },
+
+                /**
+                 * Fungsi untuk menangani preview gambar
+                 */
+                previewFile(event) {
+                    const file = event.target.files[0];
+                    if (!file) {
+                        this.imagePreview = null;
+                        this.imageFile = null;
+                        return;
+                    }
+                    
+                    this.imageFile = file;
+                    this.message = '';
+                    this.isError = false;
+                    
+                    if (this.imagePreview) {
+                        URL.revokeObjectURL(this.imagePreview);
+                    }
+                    this.imagePreview = URL.createObjectURL(file);
+                },
+
+                /**
+                 * Helper untuk menghentikan polling dan menampilkan error
+                 */
+                showError(errorMessage) {
+                    if (this.pollTimer) clearTimeout(this.pollTimer);
+                    this.pollTimer = null;
+                    this.isError = true;
+                    this.message = '❌ Error: ' + errorMessage;
+                    this.appState = 'processing';
+                },
+
+                /**
+                 * Helper untuk menghentikan polling dan menampilkan sukses
+                 */
+                showSuccess(videoUrl) {
+                    if (this.pollTimer) clearTimeout(this.pollTimer);
+                    this.pollTimer = null;
+
+                    this.videoPath = videoUrl;
+                    this.message = '✅ Video Selesai!';
+                    this.isError = false;
+                    
+                    setTimeout(() => { 
+                        this.appState = 'output'; 
+                    }, 500);
+                },
+
+                // ================== LOGIKA UTAMA (SUBMIT & POLL) ==================
+
+                /**
+                 * 1. SUBMIT GENERATION
+                 */
+                async submitGeneration() {
+                    if (!this.imageFile) {
+                        this.message = '⚠️ Mohon unggah gambar 2D.';
+                        this.isError = true;
+                        return;
                     }
 
-                    const data = await response.json(); 
-                    this.jobId = data.prompt_id; // Menggunakan prompt_id dari FastAPI
-                    this.message = 'Permintaan diterima. Job ID: ' + this.jobId + '. Memulai pengecekan status...';
-                    this.startPolling();
+                    this.isError = false;
+                    this.jobId = null;
+                    this.appState = 'processing'; 
+                    this.message = 'Mengupload gambar dan prompt...';
 
-                } catch (error) {
-                    console.error('Error komunikasi:', error);
-                    this.message = '❌ Gagal memulai proses: ' + error.message;
-                    this.isGenerating = false;
-                }
-            },
-
-            // Fungsi Polling Status (MODIFIKASI: Panggilan API NYATA)
-            startPolling() {
-                if (this.pollInterval) clearInterval(this.pollInterval);
-
-                this.pollInterval = setInterval(async () => {
-                    if (!this.jobId) return clearInterval(this.pollInterval);
+                    const formData = new FormData();
+                    formData.append('image', this.imageFile);
+                    // Sesuaikan nama field 'prompt_id' jika API menggunakan nama lain, tapi di sini kita pakai 'prompt' untuk teks
+                    formData.append('prompt', this.promptText.trim() || 'video animasi berdasarkan gambar'); 
                     
                     try {
-                        // PANGGILAN FETCH API NYATA (URL FastAPI)
-                        const response = await fetch(`http://127.0.0.1:8001/status/${this.jobId}`);
-                        
+                        // Endpoint untuk Image to Video
+                        const response = await this.fetchWithTimeout(`${this.API_BASE_URL}/image-to-video`, { 
+                            method: 'POST',
+                            body: formData
+                        });
+
                         if (!response.ok) {
-                            throw new Error('Gagal cek status.');
+                            const errorData = await response.json().catch(() => ({}));
+                            throw new Error(errorData.message || `Gagal mengirim data. Status: ${response.status}`);
                         }
                         
-                        const statusData = await response.json();
+                        const result = await response.json();
                         
-                        // --- Logika Status dari FastAPI ---
-                        if (statusData.status === 'DONE' && statusData.video_url) {
-                            clearInterval(this.pollInterval);
-                            this.isGenerating = false;
-                            
-                            // Gabungkan URL FastAPI dengan path download
-                            const base_url = 'http://127.0.0.1:8001';
-                            this.videoUrl = base_url + statusData.video_url;
-                            
-                            this.message = '✅ Video Selesai! Mengarahkan ke halaman output...';
-                            
-                            // TRANSISI KE HALAMAN OUTPUT
-                            setTimeout(() => {
-                                this.currentPage = 'output'; 
-                            }, 500);
+                        // Asumsi API Image-to-Video mengembalikan 'prompt_id'
+                        if (!result.prompt_id) { 
+                            throw new Error('Server tidak mengembalikan Job ID (prompt_id).');
+                        }
 
-                        } else if (statusData.status === 'FAILED') {
-                            clearInterval(this.pollInterval);
-                            this.isGenerating = false;
-                            this.message = '❌ Proses gagal. ' + (statusData.error || 'Terjadi kesalahan pemrosesan.');
-                        } else if (statusData.status === 'PROCESSING') {
-                             this.message = 'Sedang diproses oleh AI. Mohon tunggu...';
-                        } else if (statusData.status === 'PENDING') {
-                            this.message = 'Sedang menunggu antrian ComfyUI...';
+                        this.jobId = result.prompt_id; 
+                        this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                        
+                        this.pollJobStatus(); 
+
+                    } catch (error) {
+                        this.showError(error.message);
+                    }
+                },
+
+                /**
+                 * 2. POLLING STATUS
+                 */
+                async pollJobStatus() {
+                    if (!this.jobId) return;
+
+                    let shouldContinuePolling = false;
+                    // Endpoint untuk status video (seperti yang ada di kode JS Anda)
+                    const statusURL = `${this.API_BASE_URL}/status-video/${this.jobId}`;
+
+                    try {
+                        const response = await this.fetchWithTimeout(statusURL);
+
+                        if (response.status === 404) {
+                            this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                            shouldContinuePolling = true;
+
+                        } else if (!response.ok) {
+                            this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                            shouldContinuePolling = true;
+
+                        } else {
+                            const result = await response.json();
+                            const status = (result.status || '').toLowerCase();
+
+                            switch (status) {
+                                case 'completed':
+                                    const { filename, subfolder } = result;
+                                    if (filename && subfolder) {
+                                        // Endpoint untuk mengambil video (seperti yang ada di kode JS Anda)
+                                        const videoProxyURL = `${this.API_BASE_URL}/get-video?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}`;
+                                        this.showSuccess(videoProxyURL);
+                                    } else {
+                                        this.showError('Proses selesai, tapi backend tidak mengirim data file.');
+                                    }
+                                    break;
+                                
+                                case 'failed':
+                                    this.showError(result.error || 'Proses gagal karena error tidak diketahui.');
+                                    break;
+                                
+                                case 'processing':
+                                case 'pending':
+                                case 'queued':
+                                    this.message = `Status [${this.jobId.substring(0, 8)}]: ${status.charAt(0).toUpperCase() + status.slice(1)}...`;
+                                    shouldContinuePolling = true;
+                                    break;
+                                
+                                default:
+                                    this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                    shouldContinuePolling = true;
+                            }
                         }
                         
                     } catch (error) {
-                        console.error('Error saat polling:', error);
-                        clearInterval(this.pollInterval);
-                        this.isGenerating = false;
-                        this.message = '❌ Komunikasi server terputus.';
+                        console.warn('Error saat polling:', error.message);
+                        this.message = `Koneksi ke server status terputus... Mencoba lagi.`;
+                        shouldContinuePolling = true; 
                     }
-                    
-                }, 3000); // Polling setiap 3 detik
-            },
-            
-            // Fungsi untuk mereset ke halaman input
-            resetApp() {
-                this.currentPage = 'input';
-                this.imagePreview = null;
-                this.imageFile = null;
-                this.promptText = '';
-                this.message = '';
-                this.jobId = null;
-                this.videoUrl = null;
-                if (this.pollInterval) clearInterval(this.pollInterval);
-            }
-        }"
-            x-cloak>
 
-            <a href="/" class="absolute top-12 left-6 text-gray-500 hover:text-emerald-700 transition duration-150 flex items-center group z-10">
-                <!-- SVG Arrow Left -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-11 w-11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-            </a>
-            <!-- HEADER (Umum) -->
+                    // --- PENGENDALI POLLING UTAMA ---
+                    if (shouldContinuePolling) {
+                        this.scheduleNextPoll();
+                    }
+                },
+
+                /**
+                 * Helper untuk menjadwalkan poll berikutnya (recursive setTimeout)
+                 */
+                scheduleNextPoll() {
+                    if (this.pollTimer) clearTimeout(this.pollTimer);
+                    if (this.appState === 'processing' && !this.isError) {
+                        this.pollTimer = setTimeout(() => {
+                            this.pollJobStatus();
+                        }, this.POLL_INTERVAL_MS);
+                    }
+                },
+
+                /**
+                 * RESET APP
+                 */
+                resetApp() {
+                    if (this.pollTimer) clearTimeout(this.pollTimer);
+                    if (this.imagePreview) URL.revokeObjectURL(this.imagePreview);
+
+                    this.appState = 'input';
+                    this.imagePreview = null;
+                    this.imageFile = null;
+                    this.promptText = '';
+                    this.message = '';
+                    this.jobId = null;
+                    this.isError = false;
+                    this.videoPath = null;
+                    
+                    const fileInput = document.getElementById('image_upload');
+                    if (fileInput) fileInput.value = '';
+                }
+            }"
+            x-cloak> 
+            {{-- AKHIR DARI BLOK x-data --}}
+
             <div class="text-center mb-10">
-                <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">{{ $titleApp }} <span class="text-emerald-600">AI</span></h1>
+                <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">Image ke Video <span class="text-emerald-600">AI Generator</span></h1>
             </div>
 
 
-            <!-- ================================== HALAMAN INPUT ================================== -->
-            <form x-show="currentPage === 'input'" @submit.prevent="submitGeneration" class="space-y-10" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95">
-                <p class="text-gray-500 mt-3 text-lg">Ubah gambar diam menjadi video yang hidup dengan sentuhan AI generatif.</p>
+            {{-- 1. FORM INPUT (appState === 'input') --}}
+            <form x-show="appState === 'input'" @submit.prevent="submitGeneration" class="space-y-10" 
+                x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform translate-y-4"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform translate-y-4">
+                
+                <p class="text-gray-500 mt-3 text-lg">Ubah gambar 2D statis Anda menjadi klip video pendek.</p>
 
-                <!-- 1. UNGGAH GAMBAR -->
+                {{-- Bagian Upload Gambar --}}
                 <div class="border-b pb-8 border-gray-200">
-                    <label for="image_upload_v6" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar Utama Anda
+                    <label for="image_upload" class="flex items-center text-xl font-bold text-gray-800 mb-4">
+                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar 2D Anda
                     </label>
-
-                    <!-- Div Wrapper Utama yang Menjadi Target Klik -->
                     <div
                         class="relative mt-1 flex items-center justify-center border-4 border-dashed rounded-3xl p-8 transition duration-300 h-96 cursor-pointer group shadow-inner"
-                        :class="{'border-emerald-600 bg-green-50/50': imagePreview, 'border-gray-300 hover:border-emerald-500 hover:bg-gray-50': !imagePreview}"
-                        onclick="document.getElementById('image_upload_v6').click()">
+                        :class="{'border-emerald-600 bg-emerald-50/50': imagePreview, 'border-gray-300 hover:border-emerald-500 hover:bg-gray-50': !imagePreview}"
+                        onclick="document.getElementById('image_upload').click()">
 
-                        <input id="image_upload_v6" name="image" type="file" class="hidden" @change="previewFile" accept="image/*" required>
+                        <input id="image_upload" name="image" type="file" class="hidden" @change="previewFile" accept="image/*">
 
-                        <!-- Preview Gambar -->
+                        {{-- Tampilan Preview Gambar --}}
                         <div x-show="imagePreview" class="w-full h-full flex items-center justify-center">
                             <img :src="imagePreview" alt="Image Preview" class="max-h-full max-w-full object-contain rounded-2xl shadow-xl border-4 border-white">
                         </div>
 
-                        <!-- Placeholder Drag and Drop -->
+                        {{-- Tampilan Dropzone Awal --}}
                         <div x-show="!imagePreview" class="w-full h-full flex flex-col items-center justify-center text-gray-600">
-                            <svg class="h-16 w-16 text-gray-400 group-hover:text-green-600 transition-colors mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            <svg class="h-16 w-16 text-gray-400 group-hover:text-emerald-600 transition-colors mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                            <p class="text-3xl font-bold text-gray-800 tracking-tight mb-2">
-                                Unggah Gambar
-                            </p>
-                            <p class="text-base text-gray-500 font-medium text-center">
-                                Supported formats: JPG, PNG, GIF, JFIF (JPEG), HEIC, PDF
-                            </p>
-                            <p class="text-sm text-gray-400 mt-1">
-                                Maksimal 10MB
-                            </p>
+                            <p class="text-3xl font-bold text-gray-800 tracking-tight mb-2">Pilih/Seret Gambar</p>
+                            <p class="text-base text-gray-500 font-medium text-center">Supported formats: JPG, PNG, dll.</p>
                         </div>
                     </div>
                     <p x-show="imageFile" class="mt-4 text-base text-gray-700 text-center font-semibold truncate" x-text="'File dipilih: ' + imageFile?.name"></p>
                 </div>
 
-                <!-- 2. PROMPT INPUT -->
+                {{-- Bagian Input Prompt (Fitur Tambahan) --}}
                 <div class="border-b pb-8 border-gray-200">
                     <label for="prompt_input" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Video Anda (Prompt)
+                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Animasi (Opsional)
                     </label>
                     <textarea
                         id="prompt_input"
                         name="prompt"
-                        rows="4"
+                        rows="3"
                         x-model="promptText"
-                        required
-                        placeholder="Contoh: 'nuansa pura di sore hari'"
-                        class="shadow-lg focus:ring-green-600 focus:border-green-600 block w-full text-base border-gray-300 rounded-xl p-4 transition duration-200 resize-y"></textarea>
+                        placeholder="Contoh: 'Buat video animasi bergerak cepat, zoom out perlahan dan tambahkan efek api'"
+                        class="shadow-lg focus:ring-emerald-600 focus:border-emerald-600 block w-full text-base border-gray-300 rounded-xl p-4 transition duration-200 resize-y"></textarea>
                     <p class="mt-3 text-sm text-gray-500">
-                        Gunakan deskripsi yang detail dan spesifik untuk mendapatkan hasil video yang maksimal.
+                        Deskripsi ini akan memandu AI menentukan gerakan dan gaya video.
                     </p>
                 </div>
 
-                <!-- 3. TOMBOL SUBMIT -->
+                {{-- Tombol Submit --}}
                 <div class="flex flex-col items-center">
                     <button
                         type="submit"
-                        :disabled="isGenerating"
-                        class="
-                        w-full flex justify-center items-center py-4 px-6 border border-transparent 
-                        rounded-xl shadow-xl text-xl font-extrabold text-white 
-                        transition duration-300 transform 
-                        hover:scale-[1.01]
-                        bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-70 shadow-xl
-                    "
-                        :class="{
-                        'bg-emerald-400 cursor-not-allowed animate-pulse shadow-xl hover:bg-emerald-400': isGenerating,
-                    }">
-
-                        <span x-show="!isGenerating">
-                            Generate Video Sekarang!
-                        </span>
-
-                        <span x-show="isGenerating" class="flex items-center">
-                            <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span x-text="jobId ? 'Video ID ' + jobId.substring(0, 8) + ' Sedang Diproses...' : 'Sedang Mengantri...'"></span>
-                        </span>
+                        :disabled="!imageFile"
+                        class="w-full flex justify-center items-center py-4 px-6 border border-transparent 
+                            rounded-xl shadow-xl text-xl font-extrabold text-white 
+                            transition duration-300 transform 
+                            hover:scale-[1.01]
+                            bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-70"
+                        :class="{ 'bg-gray-400 cursor-not-allowed hover:bg-gray-400': !imageFile }">
+                        <span x-text="imageFile ? 'Upload dan Proses Video' : 'Pilih Gambar Dulu'"></span>
                     </button>
                 </div>
-
-                <!-- PESAN/STATUS NOTIFIKASI -->
-                <div x-show="message" x-text="message" x-transition:enter.duration.500ms x-cloak
-                    class="text-center p-4 rounded-xl font-medium border border-blue-300 bg-blue-100 text-blue-800 shadow-md">
-                </div>
-
             </form>
 
 
-            <!-- ================================== HALAMAN OUTPUT ================================== -->
-            <div x-show="currentPage === 'output'" class="space-y-10 text-center" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95">
+            {{-- 2. PROCESSING STATE (appState === 'processing') --}}
+            <div x-show="appState === 'processing'" id="statusArea" class="space-y-8 text-center"
+                 x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95"
+                 x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
 
-                <p class="text-gray-600 text-lg">Berikut adalah hasil video yang telah dibuat berdasarkan prompt Anda.</p>
-
-                <!-- Video Player (Menggunakan URL Placeholder) -->
-                <div class="relative w-full aspect-video rounded-2xl shadow-2xl overflow-hidden mx-auto bg-gray-900 border-4 border-white">
-
-                    <video
-                        x-show="videoUrl"
-                        :src="videoUrl"
-                        controls
-                        autoplay
-                        class="w-full h-full object-contain">
-                        Browser Anda tidak mendukung pemutaran video.
-                    </video>
-
-                    <div x-show="!videoUrl" class="absolute inset-0 flex items-center justify-center bg-gray-900">
-                        <div class="text-white text-xl font-bold">Video Sedang Dimuat...</div>
-                    </div>
-
+                {{-- Spinner, disembunyikan jika error --}}
+                <div x-show="!isError" class="flex justify-center">
+                    <div class="spinner"></div>
                 </div>
 
-                <!-- Detail & Tombol Aksi -->
-                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-lg">
-                    <p class="text-lg font-semibold text-gray-700 mb-3">Prompt yang Digunakan:</p>
-                    <p class="text-gray-500 italic mb-6 break-words" x-text="promptText || 'Tidak ada prompt yang tersimpan.'"></p>
+                {{-- Pesan Status (Bisa error atau info) --}}
+                <div id="statusMessage"
+                     x-text="message" 
+                     class="p-4 rounded-xl font-semibold border shadow-md text-xl break-words"
+                     :class="{
+                         'border-red-300 bg-red-100 text-red-800': isError,
+                         'border-blue-300 bg-blue-100 text-blue-800': !isError
+                     }">
+                </div>
+                
+                {{-- Tombol "Coba Lagi" hanya muncul saat error --}}
+                <button 
+                    x-show="isError" 
+                    @click="resetApp"
+                    class="link-button flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-red-600 hover:bg-red-700 transition duration-200 shadow-md">
+                    Coba Lagi
+                </button>
+            </div>
 
+
+            {{-- 3. OUTPUT STATE (appState === 'output') --}}
+            <div x-show="appState === 'output'" id="resultArea" class="space-y-10 text-center" 
+                x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95"
+                x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
+
+                <h2 class="text-4xl font-bold text-gray-800">Hasil Video Anda</h2>
+                <p class="text-gray-600 text-lg">Video Anda telah selesai. Putar dan unduh hasilnya.</p>
+
+                <div class="relative w-full aspect-video rounded-2xl shadow-2xl overflow-hidden mx-auto bg-gray-200 border-4 border-white">
+                    <template x-if="videoPath">
+                        <video 
+                            :src="videoPath" 
+                            id="videoPlayer"
+                            controls 
+                            autoplay 
+                            loop 
+                            class="w-full h-full object-contain">
+                            Browser Anda tidak mendukung tag video.
+                        </video>
+                    </template>
+                </div>
+
+                {{-- Bagian Download dan Reset --}}
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-lg">
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <!-- Tombol Download (Simulasi) -->
-                        <a :href="videoUrl" download="budaya_loka_ai_video.mp4"
-                            class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-md shadow-green-500/50">
+                        {{-- Tombol Download --}}
+                        <a :href="videoPath" download="ai_generated_video.mp4" id="downloadLink"
+                            class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-md shadow-emerald-500/50">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
-                            Download Video
+                            Download Video (.MP4)
                         </a>
 
-                        <!-- Tombol Kembali -->
-                        <button @click="resetApp"
+                        {{-- Tombol Reset/Buat Baru --}}
+                        <button @click="resetApp" id="resetButton"
                             class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 shadow-md">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
@@ -311,10 +444,99 @@
                         </button>
                     </div>
                 </div>
+            </div> {{-- Akhir dari appState 'output' --}}
+        </div> {{-- Akhir dari x-data --}}
+    </div>
+</div>
+
+
+<footer class="bg-gradient-to-r from-emerald-800 to-emerald-700 pt-8 pb-4 w-full text-center">
+    <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+        <div class="pb-12 grid grid-cols-1 md:grid-cols-4 gap-10 text-center md:text-left">
+
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight text-emerald-400">{{ $titleApp }}</h2>
+                <p class="mt-2 text-gray-100 max-w-xs mx-auto md:mx-0">
+                    Platform AI terdepan untuk kreasi video dan restorasi gambar.
+                </p>
             </div>
 
-        </div>
-    </div>
+            <div>
+                <h3 class="text-lg font-bold mb-4 text-emerald-300">Navigasi Cepat</h3>
+                <ul class="space-y-3 text-gray-100">
+                    <li>
+                        <a href="{{ url('/#beranda') }}" class="inline-flex items-center gap-2 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                            Beranda
+                        </a>
+                    </li>
 
-</div>
-@endsection
+                    <li>
+                        <a href="{{ url('/#fitur-ai') }}" class="inline-flex items-center gap-2 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7" />
+                                <rect x="14" y="3" width="7" height="7" />
+                                <rect x="14" y="14" width="7" height="7" />
+                                <rect x="3" y="14" width="7" height="7" />
+                            </svg>
+                            Tools AI
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('/#alur') }}" class="inline-flex items-center gap-2 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="15" rx="2" ry="2" />
+                                <polyline points="17 2 12 7 7 2" />
+                            </svg>
+                            Alur Kerja
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4 text-emerald-300">Sosial Media</h3>
+                <ul class="space-y-3 text-gray-100">
+                    <li>
+                        <a href="https://www.instagram.com/officialfidev/" target="_blank" class="inline-flex items-center gap-2 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                            </svg>
+                            Instagram
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.youtube.com/@officialfidev" target="_blank" class="inline-flex items-center gap-2 hover:text-white transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m15 12-5 3V9l5 3z" />
+                                <rect x="2" y="3" width="20" height="18" rx="4" />
+                            </svg>
+                            Youtube
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-bold mb-4 text-emerald-300">Hubungi Kami</h3>
+                <p class="text-gray-100">
+                    Bali, Indonesia
+                    <br class="mb-1" />
+                    <a href="mailto:devasur2006@gmail.com" class="text-gray-100 hover:text-white transition-colors block mt-2">
+                        fidevofficial@gmail.com
+                    </a>
+                </p>
+            </div>
+        </div>
+        <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[3px] w-full"></div>
+        <p class="text-sm text-gray-100 pt-4">&copy; 2025 {{ $titleApp }} AI. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

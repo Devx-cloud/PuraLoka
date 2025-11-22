@@ -1,7 +1,3 @@
-<!-- @extends('layouts.app')
-
-@section('content') -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +21,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 antialiased"></body>
+<body class="bg-gray-50 antialiased">
     <!--=============================================
         NAVBAR (Fixed for In-Page Navigation)
         =============================================-->
@@ -341,4 +337,3 @@
 </body>
 
 </html>
-<!-- @endsection -->
