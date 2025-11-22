@@ -25,7 +25,8 @@
     </style>
 </head>
 
-<body class="bg-gray-50 antialiased">
+<body class="bg-gray-50 antialiased"><body>
+
     <!--=============================================
         NAVBAR (Fixed for In-Page Navigation)
         =============================================-->

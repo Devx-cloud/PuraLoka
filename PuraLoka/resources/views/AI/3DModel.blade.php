@@ -26,7 +26,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 antialiased">
+<body class="bg-gray-50 antialiased"><body>
 
 {{-- Script model-viewer tetap di sini --}}
 

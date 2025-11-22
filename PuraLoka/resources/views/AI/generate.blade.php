@@ -42,7 +42,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 antialiased">
+<body class="bg-gray-50 antialiased"><body>
 
 <div class="bg-gray-50">
     <div class="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-600 flex flex-col items-center justify-center p-4 sm:p-6 lg:l-10">
