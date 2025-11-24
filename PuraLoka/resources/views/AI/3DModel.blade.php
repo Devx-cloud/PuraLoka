@@ -7,7 +7,7 @@
 
 
 <div class="bg-gray-50">
-    <div class="min-h-screen bg-gradient-to-br from-emerald-900 to-emerald-600 flex flex-col items-center justify-center p-4 sm:p-6 lg:l-10">
+    <div class="min-h-screen bg-gradient-to-br from-yellow-700 to-yellow-400 flex flex-col items-center justify-center p-4 sm:p-6 lg:l-10">
         
         {{-- 
         ========================================================================
@@ -279,7 +279,7 @@
             {{-- AKHIR DARI BLOK x-data --}}
 
             <div class="text-center mb-10">
-                <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">2D ke 3D <span class="text-emerald-600">AI Generator</span></h1>
+                <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">2D ke 3D <span class="text-mid">AI Generator</span></h1>
             </div>
 
             {{-- ====================================================== --}}
@@ -294,11 +294,11 @@
                 {{-- Bagian Upload Gambar --}}
                 <div class="border-b pb-8 border-gray-200">
                     <label for="image_upload" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar 2D Anda
+                        <span class="bg-mid text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">1</span> Unggah Gambar 2D Anda
                     </label>
                     <div
                         class="relative mt-1 flex items-center justify-center border-4 border-dashed rounded-3xl p-8 transition duration-300 h-96 cursor-pointer group shadow-inner"
-                        :class="{'border-emerald-600 bg-emerald-50/50': imagePreview, 'border-gray-300 hover:border-emerald-500 hover:bg-gray-50': !imagePreview}"
+                        :class="{'border-mid bg-emerald-50/50': imagePreview, 'border-gray-300 hover:border-yellow-500 hover:bg-gray-50': !imagePreview}"
                         onclick="document.getElementById('image_upload').click()">
 
                         <input id="image_upload" name="image" type="file" class="hidden" @change="previewFile" accept="image/*">
@@ -310,7 +310,7 @@
 
                         {{-- Tampilan Dropzone Awal --}}
                         <div x-show="!imagePreview" class="w-full h-full flex flex-col items-center justify-center text-gray-600">
-                            <svg class="h-16 w-16 text-gray-400 group-hover:text-emerald-600 transition-colors mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg class="h-16 w-16 text-gray-400 group-hover:text-yellow-500 transition-colors mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
                             <p class="text-3xl font-bold text-gray-800 tracking-tight mb-2">Pilih/Seret Gambar</p>
@@ -323,7 +323,7 @@
                 {{-- Bagian Input Prompt --}}
                 <!-- <div class="border-b pb-8 border-gray-200">
                     <label for="prompt_input" class="flex items-center text-xl font-bold text-gray-800 mb-4">
-                        <span class="bg-emerald-600 text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Model 3D (Opsional)
+                        <span class="bg-mid text-white w-9 h-9 flex items-center justify-center rounded-full mr-3 text-xl font-black">2</span> Deskripsikan Model 3D (Opsional)
                     </label>
                     <textarea
                         id="prompt_input"
@@ -346,7 +346,7 @@
                             rounded-xl shadow-xl text-xl font-extrabold text-white 
                             transition duration-300 transform 
                             hover:scale-[1.01]
-                            bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-70"
+                            bg-mid hover:bg-yellow-700 focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-70"
                         :class="{ 'bg-gray-400 cursor-not-allowed hover:bg-gray-400': !imageFile }">
                         <span x-text="imageFile ? 'Upload dan Proses' : 'Pilih Gambar Dulu'"></span>
                     </button>
@@ -362,7 +362,7 @@
 
                 {{-- Spinner, disembunyikan jika error --}}
                 <div x-show="!isError" class="flex justify-center spinner">
-                    <svg class="animate-spin h-20 w-20 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg class="animate-spin h-20 w-20 text-mid" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
@@ -420,7 +420,7 @@
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         {{-- Tombol Download --}}
                         <a :href="modelPath" download="ai_generated_3d_model.glb" id="modelLink"
-                            class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-emerald-600 hover:bg-emerald-700 transition duration-200 shadow-md shadow-emerald-500/50">
+                            class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-mid hover:bg-yellow-700 transition duration-200 shadow-md shadow-yellow-500/50">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>

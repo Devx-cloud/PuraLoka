@@ -9,7 +9,12 @@ export default {
         './app/View/Components/*.php', // Jika Anda menggunakan komponen Blade
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+            // Ini adalah kustomisasi warna yang Anda inginkan
+            'yellowes': '#B8860B', 
+      },
+        },
     },
     plugins: [],
 }

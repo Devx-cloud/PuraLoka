@@ -15,6 +15,63 @@
             font-family: 'Inter', sans-serif;
         }
 
+        /* 
+        emerald 300 (110 231 183)
+        emerald 600 (5 150 105)
+        emerald 900 (6 95 70)
+
+        low yellow (186 114 0)
+        mid yellow (235 171 57)
+        high yellow (255 237 195)
+
+        Rich Metallic Gold (184 134 11)
+        Antique Gold (201 162 63)
+        Muted Gold (212 175 55)
+        Dark Gold (166 124 0)
+        */
+        .text-low {
+            --tw-text-opacity: 1;
+            color: rgb(186 114 0 / var(--tw-text-opacity));
+        }
+
+        .text-mid {
+            --tw-text-opacity: 1;
+            color: rgb(235 171 57 / var(--tw-text-opacity));
+        }
+
+        .text-high {
+            --tw-text-opacity: 1;
+            color: rgb(255 237 195 / var(--tw-text-opacity));
+        }
+
+
+        .bg-mid {
+            --tw-text-opacity: 1;
+            background-color: rgb(235 171 57 / var(--tw-text-opacity));
+        }
+
+        .bg-high {
+            --tw-text-opacity: 1;
+            background-color: rgb(255 237 195 / var(--tw-text-opacity));
+        }
+
+
+        .border-low {
+            --tw-text-opacity: 1;
+            border-color: rgb(186 114 0 / var(--tw-text-opacity));
+        }
+
+        .border-mid {
+            --tw-text-opacity: 1;
+            border-color: rgb(235 171 57 / var(--tw-text-opacity));
+        }
+
+        .border-high {
+            --tw-text-opacity: 1;
+            border-color: rgb(255 237 195 / var(--tw-text-opacity));
+        }
+
+
         [x-cloak] {
             display: none !important;
         }
@@ -26,21 +83,21 @@
 
     @yield('content')
 
-    <!-- <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[1px] w-full"></div> -->
-    <footer class="bg-gradient-to-r from-emerald-800 to-emerald-700 pt-8 pb-4 w-full text-center">
+
+    <footer class="bg-gradient-to-tl from-yellow-700 via-yellow-600 to-yellow-600 pt-8 pb-4 w-full text-center">
         <div class="max-w-7xl mx-auto px-6 lg:px-8">
 
             <div class="pb-12 grid grid-cols-1 md:grid-cols-4 gap-10 text-center md:text-left">
 
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-emerald-400">{{ $titleApp }}</h2>
+                    <h2 class="text-2xl font-bold tracking-tight text-yellow-200">{{ $titleApp }}</h2>
                     <p class="mt-2 text-gray-100 max-w-xs mx-auto md:mx-0">
                         Platform AI terdepan untuk kreasi video dan restorasi gambar.
                     </p>
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-emerald-300">Navigasi Cepat</h3>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-200">Navigasi Cepat</h3>
                     <ul class="space-y-3 text-gray-100">
                         <li>
                             <a href="{{ url('/#beranda') }}" class="inline-flex items-center gap-2 hover:text-white transition-colors">
@@ -76,7 +133,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-emerald-300">Sosial Media</h3>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-200">Sosial Media</h3>
                     <ul class="space-y-3 text-gray-100">
                         <!-- Instagram SVG -->
                         <li>
@@ -103,7 +160,7 @@
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-bold mb-4 text-emerald-300">Hubungi Kami</h3>
+                    <h3 class="text-lg font-bold mb-4 text-yellow-200">Hubungi Kami</h3>
                     <p class="text-gray-100">
                         Bali, Indonesia
                         <br class="mb-1" />
@@ -112,15 +169,16 @@
                         </a>
                         <!-- Phone Icon -->
                         <!-- <p class="mt-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2 text-emerald-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline mr-2 text-low" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                             (Nomor Kontak)
                         </p> -->
                     </p>
                 </div>
             </div>
-            <div class="bg-linear-to-r from-transparent via-emerald-600 to-transparent h-[3px] w-full"></div>
+            <div class="bg-linear-to-r from-transparent via-yellow-500 to-transparent h-[3px] w-full"></div>
             <p class="text-sm text-gray-100 pt-4">&copy; 2025 {{ $titleApp }} AI. All rights reserved.</p>
     </footer>
+
 </body>
 
 </html>
