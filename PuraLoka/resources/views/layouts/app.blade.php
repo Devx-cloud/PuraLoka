@@ -87,7 +87,7 @@
 
 
     <footer class="">
-        <div class="bg-gradient-to-t from-white via-white to-white pt-8 pb-4 w-full text-center">
+        <div class="bg-gradient-to-t from-white via-white to-white py-4 w-full text-center">
 
             <div class="max-w-7xl mx-auto px-6 lg:px-8">
     
@@ -95,7 +95,7 @@
     
                     <div>
                         <!-- <h2 class="text-2xl font-bold tracking-tight text-black">{{ $titleApp }}</h2> -->
-                        <img src="{{ asset('assets/images/lokapura-horizontal-black.png') }}" alt="Logo Pura Agung Besakih" class="w-44 h-auto mt-[-16px]" id="navbar-logo-img">
+                        <img src="{{ asset('assets/images/lokapura-horizontal-black.png') }}" alt="Logo Pura Agung Besakih" class="w-44 h-auto mt-[-16px] mx-auto lg:ml-[-10px]" id="navbar-logo-img">
                         <p class="mt-2 text-black max-w-xs mx-auto md:mx-0">
                             Platform AI terdepan untuk kreasi video dan restorasi gambar.
                         </p>

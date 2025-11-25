@@ -2,18 +2,20 @@
 
 @section('content')
 
-    {{-- 1. NAVBAR --}}
-    @include('partials.navbar')
+{{-- 1. NAVBAR --}}
+@include('partials.navbar')
 
-    {{-- 2. HERO SECTION --}}
-    @include('partials.hero-section')
+{{-- 2. HERO SECTION --}}
+@include('partials.hero-section')
 
-    {{-- 3. FEATURE CARDS --}}
-    @include('partials.feature-cards', ['ai_tools' => $ai_tools])
+{{-- 3. FEATURE CARDS --}}
+@include('partials.feature-cards', ['ai_tools' => $ai_tools])
 
-    {{-- 4. HOW IT WORKS --}}
-    @include('partials.how-it-works')
-    <img src="{{ asset('assets/images/footer-white-mid.png') }}" alt="" class="pb-">
+{{-- 4. HOW IT WORKS --}}
+@include('partials.how-it-works')
+<div class="mt-auto">
+    <img src="{{ asset('assets/images/footer-white-black.png') }}" alt="" class="w-full">
+</div>
 @endsection
 
 {{--@section('scripts')

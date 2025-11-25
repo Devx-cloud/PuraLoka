@@ -351,7 +351,7 @@
                                 rounded-xl shadow-xl text-xl font-extrabold text-white 
                                 transition duration-300 transform 
                                 hover:scale-[1.01]
-                                bg-mid hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-500 focus:ring-opacity-70"
+                                bg-yellow-500 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-500 focus:ring-opacity-70"
                             :class="{ 'bg-gray-400 cursor-not-allowed hover:bg-gray-400': !imageFile }">
                             <span x-text="imageFile ? 'Upload dan Proses' : 'Pilih Gambar Dulu'"></span>
                         </button>
@@ -445,7 +445,9 @@
             </div> {{-- Akhir dari x-data --}}
         </div>
 
-        <img src="{{ asset('assets/images/footer-white-black.png') }}" alt="" class="pb-">
+        <div class="mt-auto">
+            <img src="{{ asset('assets/images/footer-white-black.png') }}" alt="" class="w-full">
+        </div>
     </div>
 </div>
 

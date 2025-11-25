@@ -260,21 +260,21 @@
                         if (fileInput) fileInput.value = '';
                     }
                 }"
-                x-cloak> 
+                x-cloak>
                 {{-- AKHIR DARI BLOK x-data --}}
-    
+
                 <div class="text-center mb-10">
                     <h1 class="text-5xl font-extrabold text-gray-800 tracking-tight">Image ke Video <span class="text-mid">AI Generator</span></h1>
                 </div>
-    
-    
+
+
                 {{-- 1. FORM INPUT (appState === 'input') --}}
-                <form x-show="appState === 'input'" @submit.prevent="submitGeneration" class="space-y-10" 
+                <form x-show="appState === 'input'" @submit.prevent="submitGeneration" class="space-y-10"
                     x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform translate-y-4"
                     x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform translate-y-4">
-                    
+
                     <p class="text-gray-500 mt-3 text-lg text-center">Ubah gambar 2D statis Anda menjadi klip video pendek.</p>
-    
+
                     {{-- Bagian Upload Gambar --}}
                     <div class="border-b pb-8 border-gray-200">
                         <label for="image_upload" class="flex items-center text-xl font-bold text-gray-800 mb-4">
@@ -284,14 +284,14 @@
                             class="relative mt-1 flex items-center justify-center border-4 border-dashed rounded-3xl p-8 transition duration-300 h-96 cursor-pointer group shadow-inner"
                             :class="{'border-mid bg-emerald-50/50': imagePreview, 'border-gray-300 hover:border-yellow-500 hover:bg-gray-50': !imagePreview}"
                             onclick="document.getElementById('image_upload').click()">
-    
+
                             <input id="image_upload" name="image" type="file" class="hidden" @change="previewFile" accept="image/*">
-    
+
                             {{-- Tampilan Preview Gambar --}}
                             <div x-show="imagePreview" class="w-full h-full flex items-center justify-center">
                                 <img :src="imagePreview" alt="Image Preview" class="max-h-full max-w-full object-contain rounded-2xl shadow-xl border-4 border-white">
                             </div>
-    
+
                             {{-- Tampilan Dropzone Awal --}}
                             <div x-show="!imagePreview" class="w-full h-full flex flex-col items-center justify-center text-gray-600">
                                 <svg class="h-16 w-16 text-gray-400 group-hover:text-yellow-500 transition-colors mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -303,7 +303,7 @@
                         </div>
                         <p x-show="imageFile" class="mt-4 text-base text-gray-700 text-center font-semibold truncate" x-text="'File dipilih: ' + imageFile?.name"></p>
                     </div>
-    
+
                     {{-- Bagian Input Prompt (Fitur Tambahan) --}}
                     <div class="border-b pb-8 border-gray-200">
                         <label for="prompt_input" class="flex items-center text-xl font-bold text-gray-800 mb-4">
@@ -320,7 +320,7 @@
                             Deskripsi ini akan memandu AI menentukan gerakan dan gaya video.
                         </p>
                     </div>
-    
+
                     {{-- Tombol Submit --}}
                     <div class="flex flex-col items-center">
                         <button
@@ -336,13 +336,13 @@
                         </button>
                     </div>
                 </form>
-    
-    
+
+
                 {{-- 2. PROCESSING STATE (appState === 'processing') --}}
                 <div x-show="appState === 'processing'" id="statusArea" class="space-y-8 text-center"
-                     x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95"
-                     x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
-    
+                    x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95"
+                    x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
+
                     {{-- Spinner, disembunyikan jika error --}}
                     <!-- <div x-show="!isError" class="flex justify-center">
                         <div class="spinner"></div>
@@ -353,49 +353,49 @@
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                     </div>
-    
+
                     {{-- Pesan Status (Bisa error atau info) --}}
                     <div id="statusMessage"
-                         x-text="message" 
-                         class="p-4 rounded-xl font-semibold border shadow-md text-xl break-words"
-                         :class="{
+                        x-text="message"
+                        class="p-4 rounded-xl font-semibold border shadow-md text-xl break-words"
+                        :class="{
                              'border-red-300 bg-red-100 text-red-800': isError,
                              'border-blue-300 bg-blue-100 text-blue-800': !isError
                          }">
                     </div>
-                    
+
                     {{-- Tombol "Coba Lagi" hanya muncul saat error --}}
-                    <button 
-                        x-show="isError" 
+                    <button
+                        x-show="isError"
                         @click="resetApp"
                         class="link-button flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-white bg-red-600 hover:bg-red-700 transition duration-200 shadow-md">
                         Coba Lagi
                     </button>
                 </div>
-    
-    
+
+
                 {{-- 3. OUTPUT STATE (appState === 'output') --}}
-                <div x-show="appState === 'output'" id="resultArea" class="space-y-10 text-center" 
+                <div x-show="appState === 'output'" id="resultArea" class="space-y-10 text-center"
                     x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 transform scale-95"
                     x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
-    
-                    <h2 class="text-4xl font-bold text-gray-800">Hasil Video Anda</h2>
+
+                    <!-- <h2 class="text-4xl font-bold text-gray-800">Hasil Video Anda</h2> -->
                     <p class="text-gray-600 text-lg">Video Anda telah selesai. Putar dan unduh hasilnya.</p>
-    
+
                     <div class="relative w-full aspect-video rounded-2xl shadow-2xl overflow-hidden mx-auto bg-gray-200 border-4 border-white">
                         <template x-if="videoPath">
-                            <video 
-                                :src="videoPath" 
+                            <video
+                                :src="videoPath"
                                 id="videoPlayer"
-                                controls 
-                                autoplay 
-                                loop 
+                                controls
+                                autoplay
+                                loop
                                 class="w-full h-full object-contain">
                                 Browser Anda tidak mendukung tag video.
                             </video>
                         </template>
                     </div>
-    
+
                     {{-- Bagian Download dan Reset --}}
                     <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 shadow-lg">
                         <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -407,7 +407,7 @@
                                 </svg>
                                 Download Video (.MP4)
                             </a>
-    
+
                             {{-- Tombol Reset/Buat Baru --}}
                             <button @click="resetApp" id="resetButton"
                                 class="flex items-center justify-center py-3 px-6 rounded-xl font-bold text-lg text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 shadow-md">
@@ -421,7 +421,9 @@
                 </div> {{-- Akhir dari appState 'output' --}}
             </div> {{-- Akhir dari x-data --}}
         </div>
-        <img src="{{ asset('assets/images/footer-white-black.png') }}" alt="" class="pb-">
+        <div class="mt-auto">
+            <img src="{{ asset('assets/images/footer-white-black.png') }}" alt="" class="w-full">
+        </div>
     </div>
 </div>
 
