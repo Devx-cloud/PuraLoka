@@ -13,7 +13,7 @@
 
     {{-- 4. HOW IT WORKS --}}
     @include('partials.how-it-works')
-    
+    <img src="{{ asset('assets/images/footer-white-mid.png') }}" alt="" class="pb-">
 @endsection
 
 {{--@section('scripts')

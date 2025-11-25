@@ -1,10 +1,10 @@
-<section id="beranda" class="bg-gradient-to-br from-yellow-700 to-yellow-400 text-white shadow-2xl min-h-screen flex items-center pt-16">
+<section id="beranda" class="bg-[url('/assets/images/bgPura.png')] bg-cover bg-center text-white shadow-2xl min-h-screen flex items-center pt-16    ">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center w-full">
-        <h1 class="text-5xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tighter text-yellow-100">
+        <h1 class="text-5xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tighter text-yellow-100 text-shadow-lg">
             Seni Cipta Digital. <br class="hidden md:inline"> Dari Pikiran ke Video.
         </h1>
 
-        <p class="mt-8 text-xl text-yellow-200 max-w-4xl mx-auto">
+        <p class="mt-8 text-xl text-yellow-200 max-w-4xl mx-auto text-shadow-lg">
             Platform AI terdepan yang memberdayakan arsitektur pura. hidupkan foto menjadi <span class="font-bold">video dinamis</span>, atau <span class="font-bold">restorasi</span> kenangan lama dengan akurasi tinggi.
         </p>
         <div class="mt-12 pt-6">

@@ -2,15 +2,15 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="#beranda" class="text-2xl font-extrabold tracking-widest transition duration-300 
             text-white hover:text-low" id="navbar-logo">
-            {{ $titleApp }}
+            <img src="" alt="Logo Pura Agung Besakih" class="w-47 h-auto mx-auto" id="navbar-logo-img">
         </a>
         <div class="space-x-6 hidden sm:flex" id="navbar-links">
             <a href="#beranda" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
-                text-white hover:text-low hover:border-yellow-700">Beranda</a>
+                text-white hover:text-low hover:border-yellow-600">Beranda</a>
             <a href="#fitur-ai" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
-                text-white hover:text-low hover:border-yellow-700">Tools AI</a>
+                text-white hover:text-low hover:border-yellow-600">Tools AI</a>
             <a href="#alur" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 
-                text-white hover:text-low hover:border-yellow-700">Alur </a>
+                text-white hover:text-low hover:border-yellow-600">Alur </a>
         </div>
         {{-- login?? --}}
     </div>
@@ -27,6 +27,7 @@
         const navLinksContainer = document.getElementById('navbar-links');
         const navLinks = navLinksContainer ? navLinksContainer.querySelectorAll('a') : [];
         const logoLink = document.getElementById('navbar-logo');
+        const logoImg = document.getElementById('navbar-logo-img');
 
         const classMap = {
             // ... (Kode classMap Anda di sini)
@@ -61,6 +62,11 @@
                 logoLink.classList.remove(...removeStyle.logo);
                 logoLink.classList.add(...style.logo);
             }
+            if (logoImg) {
+        logoImg.src = styleType === "light"
+            ? "/assets/images/logo-dark.png"  // logo gelap untuk background terang
+            : "/assets/images/logo-light.png"; // logo putih untuk background gelap
+    }
 
             // Links
             navLinks.forEach(link => {
