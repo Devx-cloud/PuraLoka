@@ -41,7 +41,7 @@ class GeneratorController extends Controller
             [
                 'id' => 'Image-to-3D',
                 'title' => 'Gambar ke 3D model',
-                'description' => 'ubah gambar yang awalnya 2d menjadi 3d yang dapat dilihat secara detail. Hanya dengan menginput gambar',
+                'description' => 'Ubah gambar yang awalnya 2d menjadi 3d yang dapat dilihat secara detail. Hanya dengan menginput gambar',
                 'icon_svg' => '<svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 8.5L12 3L3 8.5L12 14L21 8.5Z"/>
                     <path d="M21 8.5V15.5L12 21L3 15.5V8.5"/>

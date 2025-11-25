@@ -7,8 +7,9 @@
     <title>Video Generator AI - Pura Loka</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/logo.png">
     <!-- @vite('resources/css/app.css') -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script> -->
+    <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 

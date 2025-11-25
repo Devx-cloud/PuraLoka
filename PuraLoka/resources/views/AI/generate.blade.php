@@ -3,7 +3,7 @@
 @section('content')
 
 <div class="bg-gray-50">
-    <div class="min-h-screen bg-[url('/assets/images/pura-pt1.png')] bg-cover bg-center flex flex-col items-center justify-center pt-4 sm:pt-6 lg:l-10">
+    <div class="min-h-screen bg-[url('/assets/images/bg-pura.png')] bg-cover bg-center flex flex-col items-center justify-center pt-4 sm:pt-6 lg:l-10">
         <div class="px-7">
 
             <div
@@ -144,7 +144,8 @@
                             }
     
                             this.jobId = result.prompt_id; 
-                            this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                            // this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                            this.message = `Perintah Berhasil di-upload...`;
                             
                             this.pollJobStatus(); 
     
@@ -167,11 +168,13 @@
                             const response = await this.fetchWithTimeout(statusURL);
     
                             if (response.status === 404) {
-                                this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                                // this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                                this.message = `Status: Menunggu inisialisasi job...`;
                                 shouldContinuePolling = true;
     
                             } else if (!response.ok) {
-                                this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                                // this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                                this.message = `Server status error. Mencoba lagi...`;
                                 shouldContinuePolling = true;
     
                             } else {
@@ -195,14 +198,20 @@
                                         break;
                                     
                                     case 'processing':
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Masih memproses...`;
+                                        this.message = `Status: processing image to video akan memakan waktu 1-10 menit. Mohon tunggu sampai loading selesai`;
+                                        shouldContinuePolling = true;
+                                        break;
                                     case 'pending':
                                     case 'queued':
-                                        this.message = `Status [${this.jobId.substring(0, 8)}]: ${status.charAt(0).toUpperCase() + status.slice(1)}...`;
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu antrian...`;
+                                        this.message = `Status: Menunggu antrian...`;
                                         shouldContinuePolling = true;
                                         break;
                                     
                                     default:
-                                        this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                        this.message = `Status: error.`;
                                         shouldContinuePolling = true;
                                 }
                             }
@@ -335,8 +344,14 @@
                      x-transition:leave="transition ease-in duration-300" x-transition:leave-end="opacity-0 transform scale-95">
     
                     {{-- Spinner, disembunyikan jika error --}}
-                    <div x-show="!isError" class="flex justify-center">
+                    <!-- <div x-show="!isError" class="flex justify-center">
                         <div class="spinner"></div>
+                    </div> -->
+                    <div x-show="!isError" class="flex justify-center spinner">
+                        <svg class="animate-spin h-20 w-20 text-mid" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </div>
     
                     {{-- Pesan Status (Bisa error atau info) --}}

@@ -7,7 +7,7 @@ $image_justify = $reverse ? 'md:justify-start' : 'md:justify-end';
 <div class="md:flex {{ $order }} md:items-center md:justify-between mb-20 lg:mb-24 relative z-20 group">
 
     {{-- Lingkaran Angka Absolut (Hanya terlihat di desktop) --}}
-    <div class="hidden md:flex absolute left-1/2 top-60 transform -translate-x-1/2 -translate-y-1/2 
+    <div class="hidden md:flex absolute left-1/2 top-29 transform -translate-x-1/2 -translate-y-1/2 
                 w-20 h-20 rounded-full bg-white ring-4 ring-yellow-600 shadow-xl 
                 items-center justify-center text-mid z-30 transition duration-300 group-hover:ring-8">
         <span class="text-3xl font-extrabold">{{ $step }}</span>
@@ -33,11 +33,25 @@ $image_justify = $reverse ? 'md:justify-start' : 'md:justify-end';
     </div>
 
     <div class="md:w-1/2 flex justify-center {{ $image_justify }}">
-        <!-- <img src="{{ asset('assets/images/placeholder-' . $step . '.jpeg') }}" alt="Langkah {{ $step }}"  -->
-        <!-- <img src="{{ asset('assets/images/hasil.jpeg') }}" alt="Langkah {{ $step }}" -->
-        <img src="https://github.com/Devx-cloud/PuraLoka/blob/main/PuraLoka/public/assets/images/hasil.jpeg?raw=true" alt="Langkah {{ $step }}"
+
+    @if ($step <= 2)
+        {{-- FOTO untuk Step 1 (Unggah Aset) dan Step 2 (Berikan Prompt) --}}
+        <img src="{{ asset('assets/images/placeholder-' . $step . '.jpeg') }}" alt="Langkah {{ $step }}"
             class="w-full max-w-sm lg:max-w-md h-auto rounded-2xl shadow-2xl ring-4 ring-yellow-100 transition-transform duration-500 hover:scale-[1.03] cursor-pointer">
-    </div>
+    
+    @else
+        {{-- VIDEO untuk Step 3 (Dapatkan Hasil AI) --}}
+        <video autoplay muted loop playsinline 
+               class="w-full max-w-sm lg:max-w-md h-auto rounded-2xl shadow-2xl ring-4 ring-yellow-100 transition-transform duration-500 hover:scale-[1.03] cursor-pointer">
+            
+            {{-- Pastikan Anda memiliki file video ini di folder 'assets/videos/' --}}
+            <source src="{{ asset('assets/videos/output.mp4') }}" type="video/mp4">
+            
+            <p>Peramban Anda tidak mendukung elemen video.</p>
+        </video>
+    @endif
+    
+</div>
 
     @if ($step < 3)
         <div class="md:hidden flex justify-center pt-8">

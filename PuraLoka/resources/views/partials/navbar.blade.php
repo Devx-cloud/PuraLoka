@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="#beranda" class="text-2xl font-extrabold tracking-widest transition duration-300 
             text-white hover:text-low" id="navbar-logo">
-            <img src="" alt="Logo Pura Agung Besakih" class="w-47 h-auto mx-auto" id="navbar-logo-img">
+            <img src="" alt="Logo Pura Agung Besakih" class="w-48 h-auto mx-auto" id="navbar-logo-img">
         </a>
         <div class="space-x-6 hidden sm:flex" id="navbar-links">
             <a href="#beranda" class="font-semibold transition duration-200 py-1 border-b-2 border-transparent 

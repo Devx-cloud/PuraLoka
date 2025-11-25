@@ -1,4 +1,4 @@
-<section id="beranda" class="bg-[url('/assets/images/bgPura.png')] bg-cover bg-center text-white shadow-2xl min-h-screen flex items-center pt-16    ">
+<section id="beranda" class="bg-[url('/assets/images/bg-pura.png')] bg-cover bg-center text-white shadow-2xl min-h-screen flex items-center pt-16    ">
     <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center w-full">
         <h1 class="text-5xl sm:text-7xl md:text-8xl font-extrabold leading-tight tracking-tighter text-yellow-100 text-shadow-lg">
             Seni Cipta Digital. <br class="hidden md:inline"> Dari Pikiran ke Video.

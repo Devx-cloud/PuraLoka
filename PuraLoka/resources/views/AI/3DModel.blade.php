@@ -6,7 +6,7 @@
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/1.12.0/model-viewer.min.js"></script>
 
 <div class="bg-gray-50">
-    <div class="min-h-screen bg-[url('/assets/images/bgPura.png')] bg-cover bg-center flex flex-col items-center justify-center pt-4 sm:pt-6 lg:l-10">
+    <div class="min-h-screen bg-[url('/assets/images/bg-pura.png')] bg-cover bg-center flex flex-col items-center justify-center pt-4 sm:pt-6 lg:l-10">
         <div class="px-7">
             {{--
         ========================================================================
@@ -151,7 +151,8 @@
                             }
     
                             this.jobId = result.job_id; 
-                            this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                            //this.message = `Berhasil di-upload. Memulai status check untuk job [${this.jobId.substring(0, 8)}]...`;
+                            this.message = `Berhasil upload gambar...`;
                             
                             this.pollJobStatus(); 
     
@@ -180,13 +181,15 @@
     
                             if (response.status === 404) {
                                 // Job belum siap di backend, coba lagi
-                                this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                                // this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu inisialisasi job...`;
+                                this.message = `Status: Error`;
                                 shouldContinuePolling = true;
     
                             } else if (!response.ok) {
                                 // Error server (500, 502, dll.)
                                 // Asumsikan ini error sementara dan coba lagi
-                                this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                                // this.message = `Server status error (${response.status}). Mencoba lagi...`;
+                                this.message = `Server error. Mencoba lagi...`;
                                 shouldContinuePolling = true;
     
                             } else {
@@ -212,18 +215,21 @@
                                         break;
                                     
                                     case 'processing':
-                                        this.message = `Status [${this.jobId.substring(0, 8)}]: Masih memproses...`;
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Masih memproses...`;
+                                        this.message = `Status: processing image to 3D akan memakan waktu 1-10 menit. Mohon tunggu sampai loading selesai`;
                                         shouldContinuePolling = true;
                                         break;
                                     
                                     case 'pending':
                                     case 'queued':
-                                        this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu antrian...`;
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Menunggu antrian...`;
+                                        this.message = `Status: Menunggu antrian...`;
                                         shouldContinuePolling = true;
                                         break;
                                     
                                     default:
-                                        this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                        // this.message = `Status [${this.jobId.substring(0, 8)}]: Status tidak dikenal (${status}).`;
+                                        this.message = `Status: Error.`;
                                         shouldContinuePolling = true;
                                 }
                             }
